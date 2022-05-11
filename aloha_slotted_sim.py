@@ -55,7 +55,7 @@ def main():
 
 	plt.xlabel("# of Nodes")
 	plt.ylabel("Throughput")
-	plt.legend(['W = 3',  'W = 100'], loc='upper right')
+	plt.legend(['N = 3',  'N = 100'], loc='upper right')
 	plt.axis([0, 100, 0, 1])
 	plt.grid(linestyle='--')
 	plt.show()
