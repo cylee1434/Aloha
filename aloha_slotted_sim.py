@@ -13,13 +13,13 @@ class classNode:
 def main():
 	random.seed()
 
-	for N in [3, 100]:		
+	for window_size in [3, 100]:
 		Nlist = []
 		selist = []
-		print ("Window size: {0:2d}".format(N))
+		print ("Window size: {0:2d}".format(window_size))
 
 		for N in range(1, 101):
-			snode = [classNode(random.randrange(0, N)) for _ in range(N) ]
+			snode = [ classNode(random.randrange(0, window_size)) for _ in range(N) ]
 			successful_slots = 0
 			throughput = 0
 	
@@ -29,7 +29,7 @@ def main():
 				for i in range(N):
 					if not snode[i].ttl:
 						transmitted_nodes.append(i)
-						snode[i].ttl = random.randrange(0, N)
+						snode[i].ttl = random.randrange(0, window_size)
 					else:
 						snode[i].tick()
 	
@@ -41,7 +41,7 @@ def main():
 				
 				if (len(transmitted_nodes) > 2):
 					for j in transmitted_nodes:
-						snode[j].ttl = random.randrange(0, N)
+						snode[j].ttl = random.randrange(0, window_size)
 				
 			throughput = (successful_slots/float(TSLOTS))
 	
@@ -53,9 +53,9 @@ def main():
 		plt.plot(Nlist, selist)
 		print ("")
 
-	plt.xlabel("Nodes")
+	plt.xlabel("# of Nodes")
 	plt.ylabel("Throughput")
-	plt.legend(['W = 3', 'W = 100'], loc='upper right')
+	plt.legend(['W = 3',  'W = 100'], loc='upper right')
 	plt.axis([0, 100, 0, 1])
 	plt.grid(linestyle='--')
 	plt.show()

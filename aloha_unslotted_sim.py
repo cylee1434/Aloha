@@ -47,8 +47,8 @@ class PureAloha():
         
 
     def get_p_n(self, n, p_values):
+        # n: state, p_values: previously computed steady-state probability
         # current probability
-        
         assert (len(p_values) == n)  
 
         base0 = (1.0/self.get_P_n_nplusi(n, n-1))
@@ -109,16 +109,19 @@ def plot_performance(metric="throughput"):
     # simulation parameters:
     m = 10
     retrans_prob_all = [0.05, 0.2, 0.3, 0.5]
-    total_arr_rate_all = [0.01+0.01*x for x in range(100)]
+    total_arr_rate_all = [0.01+0.01*x for x in range(10000)]
 
     # plots
     p = []
+    s = []
+    b = []
 
     for retrans_prob in retrans_prob_all:
 
         # metrics
         expected_ns = []
         throughput = []
+        success = []
 
         # for all loads
         for total_arr_rate in total_arr_rate_all:
@@ -135,18 +138,31 @@ def plot_performance(metric="throughput"):
             # throughput
             T = sum([p_values[i]*pure_aloha.get_p_success(i) for i in range(len(p_values))])
             throughput.append(T)
-       
-
+            # print(T)
+            
+            # succeess
+            S = sum(pure_aloha.get_p_success(i)for i in range(len(p_values)))
+            success.append(S)
+            
         if metric == "throughput":        
             p.append(plt.plot(total_arr_rate_all, throughput, '-'))
     
-
-
+        if metric == "success":
+            s.append(plt.plot(total_arr_rate_all,success))
+        
+        if metric == "expected_ns":
+            b.append(plt.plot(total_arr_rate_all,expected_ns))
+            
+        
     plt.grid(True)
     plt.xlabel('Total load '+r'$\lambda$')
+    # plt.xlabel(r'$total_arr_rate_all$')
+    # if metric == "success":
+    #     plt.ylabel('success '+r'$S$')
+    # if metric == "expected_ns":
+    #     plt.ylabel('backlogged nodes '+r'$expected_n$')
     if metric == "throughput":
         plt.ylabel('Throughput '+r'$T$')
-    
     
     plt.legend((r'$retrans_prob$='+str(retrans_prob_all[0]), r'$retrans_prob$='+str(retrans_prob_all[1]), r'$retrans_prob$='+str(retrans_prob_all[2]), r'$retrans_prob$='+str(retrans_prob_all[3])), loc=0)
 
